@@ -1,3 +1,6 @@
+import Persons from './components/Persons'
+import FormNewPerson from './components/FormNewPerson'
+import Filter from './components/Filter'
 import { useState } from 'react'
 
 const App = () => {
@@ -22,7 +25,11 @@ const App = () => {
       alert('Please fill out name and number!')
       return null
     }
-    const updatedPersons = persons.concat({ name: newName, number: newNumber, id: persons.length + 1 })
+    const updatedPersons = persons.concat({
+      name: newName,
+      number: newNumber,
+      id: persons.length + 1
+    })
     setPersons(updatedPersons)
     setShownPersons(filterPersons(updatedPersons, searchInput))
     setNewName('')
@@ -33,7 +40,9 @@ const App = () => {
     if (!searchString) {
       return personList
     } else {
-      return personList.filter((p) => p.name.toUpperCase().includes(searchString.toUpperCase()))
+      return personList.filter((p) =>
+        p.name.toUpperCase().includes(searchString.toUpperCase())
+      )
     }
   }
 
@@ -51,30 +60,20 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <form>
-        <div>
-          filter shown with <input value={searchInput} onChange={handleFilterInputChange} />
-        </div>
-      </form>
-      <form onSubmit={handleSubmit}>
-        <div>
-          name: <input value={newName} onChange={handleNameInputChange} />
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleNumberInputChange} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      {shownPersons.map((person) => {
-        return (
-          <p key={person.id}>
-            {person.name} {person.number}
-          </p>
-        )
-      })}
+      <Filter
+        searchInput={searchInput}
+        handleFilterInputChange={handleFilterInputChange}
+      />
+      <h3>Add a new</h3>
+      <FormNewPerson
+        handleSubmit={handleSubmit}
+        handleNameInputChange={handleNameInputChange}
+        handleNumberInputChange={handleNumberInputChange}
+        newName={newName}
+        newNumber={newNumber}
+      />
+      <h3>Numbers</h3>
+      <Persons persons={shownPersons} />
     </div>
   )
 }
