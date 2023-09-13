@@ -26,14 +26,13 @@ const App = () => {
       alert('Please fill out name and number!')
       return null
     }
-    const updatedPersons = persons.concat({
-      name: newName,
-      number: newNumber,
-      id: persons.length + 1
+    const newPerson = { name: newName, number: newNumber, id: persons.length + 1 }
+    axios.post('http://localhost:3001/persons', newPerson)
+    .then(response => {
+      setPersons(persons.concat(response.data))
+      setNewName('')
+      setNewNumber('')
     })
-    setPersons(updatedPersons)
-    setNewName('')
-    setNewNumber('')
   }
 
   const shownPersons = searchInput
