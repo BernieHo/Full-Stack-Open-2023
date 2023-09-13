@@ -6,7 +6,6 @@ import axios from 'axios'
 
 const App = () => {
   const [persons, setPersons] = useState([])
-  const [shownPersons, setShownPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchInput, setSearchInput] = useState('')
@@ -14,7 +13,6 @@ const App = () => {
   useEffect(() => {
     axios.get('http://localhost:3001/persons').then((response) => {
       setPersons(response.data)
-      setShownPersons(response.data)
     })
   }, [])
 
@@ -34,20 +32,13 @@ const App = () => {
       id: persons.length + 1
     })
     setPersons(updatedPersons)
-    setShownPersons(filterPersons(updatedPersons, searchInput))
     setNewName('')
     setNewNumber('')
   }
 
-  const filterPersons = (personList, searchString) => {
-    if (!searchString) {
-      return personList
-    } else {
-      return personList.filter((p) =>
-        p.name.toUpperCase().includes(searchString.toUpperCase())
-      )
-    }
-  }
+  const shownPersons = searchInput
+    ? persons.filter(p => p.name.toUpperCase().includes(searchInput.toUpperCase()))
+    : persons
 
   const handleNameInputChange = (event) => {
     setNewName(event.target.value)
@@ -57,7 +48,6 @@ const App = () => {
   }
   const handleFilterInputChange = (event) => {
     setSearchInput(event.target.value)
-    setShownPersons(filterPersons(persons, event.target.value))
   }
 
   return (
