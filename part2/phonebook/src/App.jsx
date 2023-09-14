@@ -1,4 +1,4 @@
-import Persons from './components/Persons'
+import Person from './components/Person.jsx'
 import FormNewPerson from './components/FormNewPerson'
 import Filter from './components/Filter'
 import { useEffect, useState } from 'react'
@@ -32,6 +32,16 @@ const App = () => {
     })
   }
 
+  const removePerson = person => {
+    if (confirm(`Delete ${person.name}`)) {
+      personService.remove(person.id).then(statusText => {
+        if (statusText === 'OK') {
+          setPersons(persons.filter(p => p !== person))
+        }
+      })
+    }
+  }
+
   const shownPersons = searchInput
     ? persons.filter(p => p.name.toUpperCase().includes(searchInput.toUpperCase()))
     : persons
@@ -62,7 +72,15 @@ const App = () => {
         newNumber={newNumber}
       />
       <h3>Numbers</h3>
-      <Persons persons={shownPersons} />
+      <div>
+        {shownPersons.map(person => (
+          <Person
+            key={person.id}
+            person={person}
+            remove={() => removePerson(person)}
+          />
+        ))}
+      </div>
     </div>
   )
 }
