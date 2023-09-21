@@ -12,6 +12,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [searchInput, setSearchInput] = useState('')
   const [notificationMessage, setNotificationMessage] = useState(null)
+  const [notificationType, setNotificationType] = useState('info') // info / error
 
   useEffect(() => {
     personService.getAll().then(initialPersons => setPersons(initialPersons))
@@ -33,17 +34,26 @@ const App = () => {
           setNotificationMessage(`Changed number of ${returnedPerson.name}`)
           setTimeout(() => {
             setNotificationMessage(null)
-          } , 3500)
+          }, 3500)
         })
+        .catch(() => {
+            setNotificationType('error')
+            setNotificationMessage(`Information of ${existingPerson.name} has already been removed from server`)
+            setTimeout(() => {
+              setNotificationMessage(null)
+            }, 3500)
+          }
+        )
       }
     } else {
       const newPerson = { name: newName, number: newNumber, id: persons.length + 1 }
       personService.create(newPerson).then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
+        setNotificationType('info')
         setNotificationMessage(`Added ${returnedPerson.name}`)
         setTimeout(() => {
           setNotificationMessage(null)
-        } , 3500)
+        }, 3500)
       })
     }
     setNewName('')
@@ -77,7 +87,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      {notificationMessage ? <Notification message={notificationMessage}/>: null}
+      {notificationMessage ? <Notification message={notificationMessage} type={notificationType} /> : null}
       <Filter
         searchInput={searchInput}
         handleFilterInputChange={handleFilterInputChange}
