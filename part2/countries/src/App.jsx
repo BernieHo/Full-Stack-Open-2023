@@ -7,6 +7,10 @@ function App() {
   const [countriesData, setCountriesData] = useState([])
   const [matchCountryNames, setMatchCountryNames] = useState([])
 
+  const handleShowCountry = (country) => {
+    setMatchCountryNames([country])
+  }
+
   useEffect(() => {
     countriesApi.fetchAll().then((data) => {
       setCountriesData(data)
@@ -32,7 +36,11 @@ function App() {
         <label>find countries</label>
         <input value={inputText} onChange={handleInputChange} type="text" />
       </form>
-      <CountryResults matchedNames={matchCountryNames} countriesData={countriesData} />
+      <CountryResults
+        matchedNames={matchCountryNames}
+        countriesData={countriesData}
+        showCountry={handleShowCountry}
+      />
     </div>
   )
 }

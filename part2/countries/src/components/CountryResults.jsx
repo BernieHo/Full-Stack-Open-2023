@@ -1,6 +1,6 @@
 import FullCountryData from './FullCountryData.jsx'
 
-function CountryResults({ matchedNames, countriesData }) {
+function CountryResults({ matchedNames, countriesData, showCountry }) {
   if (matchedNames.length === 0) {
     return (<></>)
   }
@@ -13,7 +13,13 @@ function CountryResults({ matchedNames, countriesData }) {
   }
   if (matchedNames.length <= 10) {
     return (
-      <ul>{matchedNames.map((country) => <li key={country}>{country}</li>)}</ul>
+      <ul>{matchedNames.map((country) => (
+          <li key={country}>
+            {country}
+            <button onClick={() => showCountry(country)}>show</button>
+          </li>
+        )
+      )}</ul>
     )
   } else {
     return (
